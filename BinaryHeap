@@ -1,0 +1,168 @@
+package com.KishanPrice;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+	// write your code here
+        System.out.println("Enter the heap Size");
+        Scanner sc=new Scanner(System.in);
+        int capacity=sc.nextInt();
+    BinaryHeap myHeap=new BinaryHeap(capacity);
+
+
+        int noofinput,temp,count=0;
+        System.out.println("Enter how many element you want to insert in heap");
+        noofinput=sc.nextInt();
+        System.out.println("Enter all the heap element one by one");
+        while(count<noofinput)
+        {
+            count++;
+            temp=sc.nextInt();
+            myHeap.insert(temp);
+
+
+        }
+
+        myHeap.printAllArrayElements();
+
+        System.out.println("Enter the index which need to be deleted");
+        int index;
+        index=sc.nextInt();
+        myHeap.deleteKey(index);
+        myHeap.printAllArrayElements();
+
+        myHeap.heapSort();
+        myHeap.printAllArrayElements();
+
+
+
+    }
+}
+class BinaryHeap{
+    private int array[];
+    private int size,capacity;
+    BinaryHeap(int capacity)
+    {
+        this.size=0;
+        this.capacity=capacity;
+        array=new int[capacity];
+    }
+
+    public int parent(int i){
+        return (i-1)/2;
+    }
+
+    public int leftChild(int i)
+    {
+        return 2*i+1;
+    }
+
+    public void insert(int no)
+    {
+        if(size==capacity) {
+            System.out.println("Heap is Full , we cannot insert more element");
+            return;
+        }
+        size++;
+        int i=size-1;
+        while(i!=0 && array[parent(i)]<no){
+            array[i]=array[parent(i)];
+            i=parent(i);
+        }
+        array[i]=no;
+
+
+    }
+
+    public void printAllArrayElements(){
+
+        for(int i=0;i<size;i++)
+        {
+            System.out.print(array[i]+" ");
+        }
+        System.out.println(" ");
+    }
+
+    public int getMax(){
+        return array[0];
+    }
+
+    public int extractMax()
+    {
+      if(size==0)
+      {
+          System.out.println("We can not delete as there is no more element");
+          return Integer.MIN_VALUE;
+      }
+      if(size==1)
+      {
+          size=0;
+          return array[0];
+      }
+      int maxValue=array[0];
+      array[0]=array[size-1];
+      size--;
+      heapify(0,size);
+
+      return maxValue;
+
+    }
+    public void heapify(int idx,int size)
+    {
+        int i,leftChild,rightChild,max;
+        i=idx;
+        leftChild=2*idx+1;
+        rightChild=2*idx+2;
+        max=idx;
+        if(leftChild <size && array[leftChild]>array[max] )
+            max=leftChild;
+        if(rightChild <size && array[rightChild]>array[max] )
+            max=rightChild;
+
+        if(idx!=max)
+        {
+            swapInArray(idx,max);
+            heapify(max,size);
+        }
+    }
+    public void swapInArray(int index1,int index2){
+        int temp;
+        temp=array[index1];
+        array[index1]=array[index2];
+        array[index2]=temp;
+    }
+    public void heapSort()
+    {
+        for(int i=((size-1)-1)/2;i>=0;i--)
+        {
+            heapify(i,size);
+        }
+
+        for(int i=size-1;i>0;i--)
+        {
+            swapInArray(0,i);
+            heapify(0,i);
+
+        }
+    }
+
+    public void deleteKey(int index){
+        replace(index,Integer.MAX_VALUE);
+        extractMax();
+
+    }
+
+    public void replace(int index,int value)
+    {
+
+        while( index!=0 && array[parent(index)]<value){
+            array[index]=array[parent(index)];
+            index=parent(index);
+        }
+        array[index]=value;
+    }
+
+
+}
